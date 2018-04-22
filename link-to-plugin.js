@@ -37,6 +37,7 @@ const files = [
 function unlink(file) {
   try {
     fs.unlinkSync(file);
+    console.log(`Unlink "${file}"`);
   } catch (err) {
     if (err.code != "ENOENT") {
       throw err;
@@ -48,11 +49,14 @@ function link(from, to, type) {
   from = path.resolve(from);
   to = path.resolve(to);
   fs.symlinkSync(from, to, type);
+  console.log(`Link from "${from}" to "${to}"`);
 }
 
-for (const [from, to, type] of files) {
+for (const [, to] of files) {
   unlink(to);
-  if (!args["--clear"]) {
-    link(from, to, type);
+}
+if (!args["--clear"]) {
+  for (const args of files) {
+    link(...args);
   }
 }
