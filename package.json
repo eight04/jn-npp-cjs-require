@@ -1,0 +1,16 @@
+{
+  "name": "jn-npp-cjs-require",
+  "version": "0.0.0",
+  "license": "MIT",
+  "repository": "eight04/jn-npp-cjs-require",
+  "devDependencies": {
+    "eslint": "^4.19.1",
+    "neodoc": "^2.0.0"
+  },
+  "dependencies": {},
+  "scripts": {
+    "test": "eslint **/*.js --cache",
+    "preversion": "npm test",
+    "postversion": "git push --follow-tags"
+  }
+}
