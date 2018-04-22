@@ -1,6 +1,6 @@
 {
   "name": "jn-npp-cjs-require",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "license": "MIT",
   "repository": "eight04/jn-npp-cjs-require",
   "devDependencies": {
