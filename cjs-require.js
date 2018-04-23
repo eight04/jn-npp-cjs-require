@@ -20,10 +20,17 @@ cjsRequireFactory = typeof cjsRequireFactory != "undefined" ? cjsRequireFactory 
         cjsRequireFactory.require = cjsRequireFactory(file);
         cjsRequireFactory.module = cache[file];
         
-        // load module
-        var script = "(function(require, module, exports) {" + readFile(file, "UTF-8") + "})(cjsRequireFactory.require, cjsRequireFactory.module, cjsRequireFactory.module.exports)";
         try {
-          System.addScript(script, file);
+          // load module
+          var content = readFile(file, "UTF-8");
+          if (/\.json$/i.test(file)) {
+            cjsRequireFactory.module.exports = JSON.parse(content);
+          } else {
+            System.addScript(
+              "(function(require, module, exports) {" + content + "})(cjsRequireFactory.require, cjsRequireFactory.module, cjsRequireFactory.module.exports)",
+              file
+            );
+          }
         } catch (err) {
           delete cache[file];
           throw err;
@@ -36,23 +43,31 @@ cjsRequireFactory = typeof cjsRequireFactory != "undefined" ? cjsRequireFactory 
       
       return cache[file].exports;
       
-      function resolvePath(path) {
-        if (path[0] == ".") {
-          if (fso.FileExists(importerDir + path)) {
-            return importerDir + path;
-          }
-          if (fso.FileExists(importerDir + path + ".js")) {
-            return importerDir + path + ".js";
-          }
-        } else {
-          if (fso.FileExists(PLUGIN_DIR + "/" + path)) {
-            return PLUGIN_DIR + "/" + path;
-          }
-          if (fso.FileExists(PLUGIN_DIR + "/" + path + ".js")) {
-            return PLUGIN_DIR + "/" + path + ".js";
-          }
+      function resolveExt(path) {
+        if (fso.FileExists(path)) {
+          return path;
         }
-        throw new Error("Can't resolve importee: " + path + "\nimporter: " + importer);
+        if (fso.FileExists(path + ".js")) {
+          return path + ".js";
+        }
+        if (fso.FileExists(path + "/index.js")) {
+          return path + "/index.js";
+        }
+      }
+      
+      function resolvePath(path) {
+        var resolved;
+        if (path[0] == ".") {
+          resolved = resolveExt(importerDir + "/" + path);
+        } else if (/^(\w+:)?[\\/]/.test(path)) {
+          resolved = resolveExt(path);
+        } else {
+          resolved = resolveExt(PLUGIN_DIR + "/" + path);
+        }
+        if (!resolved) {
+          throw new Error("Can't resolve importee: " + path + "\nimporter: " + importer);
+        }
+        return resolved;
       }
     }
     requireFunction.cache = cache;
