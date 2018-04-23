@@ -47,6 +47,12 @@ Get the commonjs `require` function for `filename`.
 Changelog
 =========
 
+* 0.1.1 (Apr 23, 2018)
+
+  - Add: support absolute path.
+  - Add: support folder.
+  - Add: support JSON.
+
 * 0.1.0 (Apr 23, 2018)
 
   - Initial release.
