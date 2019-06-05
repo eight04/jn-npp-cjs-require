@@ -4,8 +4,8 @@
   "license": "MIT",
   "repository": "eight04/jn-npp-cjs-require",
   "devDependencies": {
-    "eslint": "^4.19.1",
-    "neodoc": "^2.0.0"
+    "eslint": "^5.16.0",
+    "neodoc": "^2.0.2"
   },
   "dependencies": {},
   "scripts": {
